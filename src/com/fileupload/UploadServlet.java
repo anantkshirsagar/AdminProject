@@ -21,7 +21,7 @@ import com.fileupload.util.FileUploadUtils;
 @WebServlet("/UploadServlet")
 public class UploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public static final String uploadFilePath = "H:\\eclipse-project-workspace\\AdminProject\\uploadedfiles";
+	public static final String uploadFilePath = "H:\\eclipse-14-May-2019-workspace\\AdminProject\\uploadedfiles";
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
