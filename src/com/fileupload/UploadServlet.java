@@ -27,14 +27,20 @@ public class UploadServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		try {
-			//FileUploadUtils.uploadFile(uploadFilePath, request);
+//			FileUploadUtils.uploadFile(uploadFilePath, request);
+			
+			DatabaseService dbService = new DatabaseService();
 			Map<String, InputStream> fileInputStream = FileUploadUtils.getFileInputStream(request);
 			for(Map.Entry<String, InputStream> fileIS : fileInputStream.entrySet()) {
 				System.out.println(" FileName: " +fileIS.getKey());
-				FileUploadUtils.writeStream(fileIS.getValue(), new File(uploadFilePath, fileIS.getKey()));
+				//FileUploadUtils.writeStream(fileIS.getValue(), new File(uploadFilePath, fileIS.getKey()));
+				dbService.saveFile(fileIS.getValue());
 			}
 		} catch (FileUploadException e) {
 			System.out.println(" Fileupload exception: " +e);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
