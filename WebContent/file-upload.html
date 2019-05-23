@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="ISO-8859-1">
-		<title>Insert title here</title>
-	</head>
-	
-	<body>
-		<form action = "UploadServlet" method = "post" enctype = "multipart/form-data">
-	         <input type = "file" name = "filename" size = "50" />
-	         <br />
-	         <input type = "submit" value = "Upload File" />
-		</form>
-	</body>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+
+<body>
+	<form action="UploadServlet" method="post"
+		enctype="multipart/form-data">
+		<input type="file" name="filename" size="50" /> <br /> <input
+			type="submit" value="Upload File" />
+	</form>
+
+	<form action="UploadServlet" method="post">
+		<input type="text" name="id" /> <input type="submit" value="Download">
+	</form>
+
+	<form action="TestCsv" method="POST">
+		<input type="submit" value="Download CSV">
+	</form>
+
+
+	<form method="POST" enctype="multipart/form-data" action="UploadCsv">
+		File to upload: <input type="file" name="mycsvfile"><br /> <input
+			type="submit" value="Press"> to upload the file!
+	</form>
+</body>
 </html>
