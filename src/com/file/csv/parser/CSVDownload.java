@@ -2,13 +2,22 @@ package com.file.csv.parser;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.commons.util.ContentTypes;
 
+/**
+ * This class provides methods to download csv.
+ * 
+ * @author Anant Kshirsagar
+ *
+ */
 public class CSVDownload {
 	private static final Logger logger = Logger.getLogger("CSVDownload");
 	private static final String NEW_LINE = "\n";
@@ -52,6 +61,12 @@ public class CSVDownload {
 		logger.info("CSV download successfully!");
 	}
 
+	/**
+	 * This method is responsible to convert List<List<String>> data into a string.
+	 * 
+	 * @param data
+	 * @return
+	 */
 	private static String parseDataAndMakeString(List<List<String>> data) {
 		logger.info("Inside parseDataAndMakeString method");
 		StringBuilder content = new StringBuilder();
@@ -63,9 +78,61 @@ public class CSVDownload {
 		}
 		return content.toString();
 	}
-	
-	/** TODO
-	 * Implement method which takes string contains comma separated rows and enter for new line and parse the string and download csv file
-	 * Method params: String filename, String data, HttpServletResponse response
+
+	/**
+	 * 
+	 * This method takes filename, data in the comma delimited format then parse
+	 * data and download csv with provided filename
+	 * 
+	 * @throws ServletException
+	 * @throws IOException
 	 */
+	public static void downloadCSV(String fileName, String data, HttpServletResponse response)
+			throws ServletException, IOException {
+		if (data == "" || data == null) {
+			throw new NullPointerException("Data cannot be empty");
+		}
+
+		if (fileName == "" || fileName == null) {
+			throw new NullPointerException("Filename cannot be empty");
+		}
+
+		if (response == null) {
+			throw new ServletException("HttpServletResponse cannot be null");
+		}
+
+		logger.info("Preparing data...");
+		List<List<String>> dataList = parse(data);
+		downloadCSV(dataList, response, fileName);
+	}
+
+	/**
+	 * This method is responsible to parse data which is given in comma separated
+	 * format and convert it into List<List<String>>
+	 * 
+	 * @param data
+	 * @return List<List<String>>
+	 */
+	private static List<List<String>> parse(String data) {
+		logger.info("Inside parse method");
+		List<List<String>> dataList = new ArrayList<>();
+		StringTokenizer rowTokens = new StringTokenizer(data, NEW_LINE);
+		List<String> rows = new ArrayList<>();
+		while (rowTokens.hasMoreElements()) {
+			rows.add(rowTokens.nextToken().trim());
+		}
+
+		if (rows != null) {
+			for (String row : rows) {
+				StringTokenizer columnTokens = new StringTokenizer(row, COMMA);
+				List<String> columnData = new ArrayList<>();
+				while (columnTokens.hasMoreElements()) {
+					columnData.add(columnTokens.nextToken().trim());
+				}
+				dataList.add(columnData);
+			}
+		}
+		logger.info("Data prepared successfully");
+		return dataList;
+	}
 }

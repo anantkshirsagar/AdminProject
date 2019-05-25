@@ -24,7 +24,13 @@ public class TestCsv extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		CSVDownload.downloadCSV(getData(), response, "StudentInfo.csv");
+		//CSVDownload.downloadCSV(getData(), response, "StudentInfo.csv");
+		try {
+			CSVDownload.downloadCSV("StudentInfo.csv", getStringData(), response);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //		response.setContentType(ContentTypes.TEXT_CSV.getContentType());
 //		response.setHeader("Content-Disposition", "attachment; filename=\"userDirectory.csv\"");
 //		try {
@@ -57,6 +63,13 @@ public class TestCsv extends HttpServlet {
 		dataRow2.add("8080808080");
 		dataRow2.add("Mumbai");
 		data.add(dataRow2);
+		return data;
+	}
+	
+	public String getStringData() {
+		String data = "Name,RollNo, City\n";
+		data += "Anant,101,Pune\n";
+		data += "Suyog, 102, Mumbai\n";
 		return data;
 	}
 }
