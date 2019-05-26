@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Paths;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -14,10 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import com.file.csv.download.CSVData;
+import com.file.csv.upload.CSVUpload;
 
-import com.commons.util.ContentTypes;
-import com.oracle.jrockit.jfr.ContentType;
 @MultipartConfig
 @WebServlet("/UploadCsv")
 public class UploadCsv extends HttpServlet {
@@ -29,14 +27,19 @@ public class UploadCsv extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType(ContentTypes.TEXT_CSV.getContentType());
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-		System.out.println(isMultipart);
-		Part filePart = request.getPart("mycsvfile"); // Retrieves <input type="file" name="file">
-		String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
-		InputStream fileContent = filePart.getInputStream();
-		String value = getValue(filePart);
-		System.out.println(value);
+
+		CSVData csvData = CSVUpload.uploadCSV(request, response, "mycsvfile");
+		System.out.println(csvData.getFileData());
+
+//		response.setContentType(ContentTypes.TEXT_CSV.getContentType());
+//		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+//		System.out.println(isMultipart);
+//		Part filePart = request.getPart("mycsvfile"); // Retrieves <input type="file" name="file">
+//		String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+//		InputStream fileContent = filePart.getInputStream();
+//		//String value = getValue(filePart);
+//		String value = getValueFromInputStream(fileContent);
+//		System.out.println(value);
 	}
 
 	private static String getValue(Part part) throws IOException {
@@ -47,5 +50,18 @@ public class UploadCsv extends HttpServlet {
 			value.append(buffer, 0, length);
 		}
 		return value.toString();
+	}
+
+	private static String getValueFromInputStream(InputStream inputStream) throws IOException {
+		int data = inputStream.read();
+		char ch = 0;
+		String stringData = "";
+		while (data != -1) {
+			data = inputStream.read();
+			ch = (char) data;
+			stringData += String.valueOf(ch);
+		}
+		inputStream.close();
+		return stringData;
 	}
 }
