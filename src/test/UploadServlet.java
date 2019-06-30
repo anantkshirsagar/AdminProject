@@ -27,22 +27,23 @@ import com.file.upload.util.FileUploadUtils;
 @WebServlet("/UploadServlet")
 public class UploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public static final String UPLOAD_FILE_PATH = "H:\\eclipse-14-May-2019-workspace\\AdminProject\\uploadedfiles";
+	public static final String UPLOAD_FILE_PATH = "home/anant/eclipse-ee-workspace/AdminProject/uploadedfiles";
 	public static final String DOWNLOAD_FILE_PATH = "H:\\eclipse-14-May-2019-workspace\\AdminProject\\downloadedfiles";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
+			uploadFile(request);
 			// insertFile(request);
 			// downloadFile(request, response);
 			//downloadFileClientSide(request, response);
 			//downloadFile(request, response, this);
 			
-			DatabaseService dbService = new DatabaseService();
-			Map.Entry<String, Blob> fileDataMap = dbService.getFile(2L).entrySet().iterator().next();
-			String fileName = fileDataMap.getKey();
-			Blob fileContents = fileDataMap.getValue();
-			FileDownloadUtils.saveFileToLocation("C:\\Users\\ANANT\\Desktop\\Kachara", fileName, fileContents);			
+//			DatabaseService dbService = new DatabaseService();
+//			Map.Entry<String, Blob> fileDataMap = dbService.getFile(2L).entrySet().iterator().next();
+//			String fileName = fileDataMap.getKey();
+//			Blob fileContents = fileDataMap.getValue();
+//			FileDownloadUtils.saveFileToLocation("C:\\Users\\ANANT\\Desktop\\Kachara", fileName, fileContents);			
 		} catch (Exception e) {
 			System.out.println(" Exception: " + e);
 		}
