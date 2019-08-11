@@ -1,4 +1,4 @@
-package com.service.sms;
+package com.service.textlocal.sms;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,32 +10,24 @@ import java.util.logging.Logger;
 
 import com.commons.util.Encoding;
 
+/**
+ * This class is used to send sms using TextLocal API
+ * 
+ * @author ANANT KSHIRSAGAR
+ *
+ */
 public class SmsService {
 	private static final Logger LOG = Logger.getLogger(SmsService.class.getName());
 
 	private static final String METHOD = "POST";
 	private static final String CONTENT_LENGTH = "Content-Length";
 
-	private static SmsPropertyReader smsPropertyReader;
-	private static SmsProperty smsProperty;
-	private static SmsService smsService;
+	private SmsPropertyReader smsPropertyReader;
+	private SmsProperty smsProperty;
 
-	private SmsService(File file) throws IOException {
+	public void load(File file) throws IOException {
 		setSmsPropertyReader(new SmsPropertyReader(file));
-		setSmsProperty(smsPropertyReader.getSmsProperties());
-	}
-
-	/**
-	 * This method is used to getInstance of SmsService and it takes file which is
-	 * sms.properties
-	 * 
-	 * @param file
-	 * @return SmsService
-	 * @throws IOException
-	 */
-	public static SmsService getInstance(File file) throws IOException {
-		smsService = new SmsService(file);
-		return smsService;
+		setSmsProperty(getSmsPropertyReader().getSmsProperties());
 	}
 
 	/**
@@ -50,9 +42,9 @@ public class SmsService {
 		if (smsDetails == null) {
 			throw new NullPointerException("SmsDetails cannot be empty");
 		}
-		HttpURLConnection connection = (HttpURLConnection) new URL(smsProperty.getTextLocalURL()).openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL(getSmsProperty().getTextLocalURL()).openConnection();
 		String data = buildURL(smsDetails);
-		LOG.info("Data: " +data);
+		LOG.info("Data: " + data);
 		connection.setDoOutput(true);
 		connection.setRequestMethod(METHOD);
 		LOG.info("Data length: " + data.length());
@@ -77,9 +69,9 @@ public class SmsService {
 	 * @param smsDetails
 	 * @return
 	 */
-	private static String buildURL(SmsDetails smsDetails) {
+	private String buildURL(SmsDetails smsDetails) {
 		String numbers = buildNumberString(smsDetails.getNumbers());
-		return new StringBuilder("apikey=").append(smsProperty.getApiKey()).append(numbers).append("&message=")
+		return new StringBuilder("apikey=").append(getSmsProperty().getApiKey()).append(numbers).append("&message=")
 				.append(smsDetails.getMessage()).append("&sender=").append(smsDetails.getSender()).toString();
 	}
 
@@ -103,27 +95,19 @@ public class SmsService {
 		return numberString.toString();
 	}
 
-	public static SmsPropertyReader getSmsPropertyReader() {
+	public SmsPropertyReader getSmsPropertyReader() {
 		return smsPropertyReader;
 	}
 
-	public static void setSmsPropertyReader(SmsPropertyReader smsPropertyReader) {
-		SmsService.smsPropertyReader = smsPropertyReader;
+	public void setSmsPropertyReader(SmsPropertyReader smsPropertyReader) {
+		this.smsPropertyReader = smsPropertyReader;
 	}
 
-	public static SmsProperty getSmsProperty() {
+	public SmsProperty getSmsProperty() {
 		return smsProperty;
 	}
 
-	public static void setSmsProperty(SmsProperty smsProperty) {
-		SmsService.smsProperty = smsProperty;
-	}
-
-	public static SmsService getSmsService() {
-		return smsService;
-	}
-
-	public static void setSmsService(SmsService smsService) {
-		SmsService.smsService = smsService;
+	public void setSmsProperty(SmsProperty smsProperty) {
+		this.smsProperty = smsProperty;
 	}
 }

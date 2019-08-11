@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.commons.util.ContentTypes;
 import com.service.email.EmailDetails;
+import com.service.email.EmailService;
 
 public class TestEmail {
 	public static void main(String[] args) throws Exception {
@@ -27,8 +28,9 @@ public class TestEmail {
 		// emailDetails.setTo("anantkshirsagar38@gmail.com", "icbm.iot@gmail.com");
 		emailDetails.setTo("icbm.iot@gmail.com");
 		emailDetails.setContentType(ContentTypes.TEXT_HTML);
-		com.service.email.EmailService emailService = com.service.email.EmailService
-				.getInstance(new File("H:\\eclipse-14-May-2019-workspace\\AdminProject\\resources\\email.properties"));
+		
+		EmailService emailService = new EmailService();
+		emailService.load(new File("H:\\eclipse-14-May-2019-workspace\\AdminProject\\resources\\email.properties"));
 		// Response[] sendEmail = emailService.sendMultipleEmail(emailDetails);
 		emailService.sendEmail(emailDetails);
 		// System.out.println(sendEmail);

@@ -1,4 +1,4 @@
-package com.service.sms;
+package com.service.textlocal.sms;
 
 import java.util.Arrays;
 

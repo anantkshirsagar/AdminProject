@@ -3,8 +3,8 @@ package test;
 import java.io.File;
 import java.io.IOException;
 
-import com.service.sms.SmsDetails;
-import com.service.sms.SmsService;
+import com.service.textlocal.sms.SmsDetails;
+import com.service.textlocal.sms.SmsService;
 
 public class TestSms {
 	public static void main(String[] args) throws IOException {
@@ -16,8 +16,9 @@ public class TestSms {
 		smsDetails.setMessage("This message is send from textlocal sms api.");
 		smsDetails.setNumbers("Put your mobile no here.");
 		smsDetails.setSender("TXTLCL");
-		SmsService smsService = SmsService
-				.getInstance(new File("H:\\eclipse-14-May-2019-workspace\\AdminProject\\resources\\sms.properties"));
+
+		SmsService smsService = new SmsService();
+		smsService.load(new File("resources/sms.properties"));
 		smsService.sendSms(smsDetails);
 	}
 }

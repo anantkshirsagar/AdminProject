@@ -23,13 +23,12 @@ import com.sendgrid.SendGrid;
  */
 public class EmailService {
 	private static final Logger LOG = Logger.getLogger(EmailPropertyReader.class.getName());
-	private static EmailPropertyReader emailPropertyReader;
-	private static EmailProperty emailProperty;
-	private static EmailService emailService;
+	private EmailPropertyReader emailPropertyReader;
+	private EmailProperty emailProperty;
 
-	private EmailService(File file) throws IOException {
+	public void load(File file) throws IOException {
 		setEmailPropertyReader(new EmailPropertyReader(file));
-		setEmailProperty(emailPropertyReader.getEmailProperties());
+		setEmailProperty(getEmailPropertyReader().getEmailProperties());
 	}
 
 	private enum Endpoint {
@@ -47,19 +46,6 @@ public class EmailService {
 	}
 
 	/**
-	 * This method is used to getInstance of EmailService and it takes file which is
-	 * email.properties
-	 * 
-	 * @param file
-	 * @return EmailService
-	 * @throws IOException
-	 */
-	public static EmailService getInstance(File file) throws IOException {
-		emailService = new EmailService(file);
-		return emailService;
-	}
-
-	/**
 	 * This method is used to send a single mail.
 	 * 
 	 * @param emailDetails
@@ -73,8 +59,8 @@ public class EmailService {
 		Content content = new Content(emailDetails.getContentType().TEXT_HTML.getContentType(), emailDetails.getBody());
 
 		LOG.info("Setting API Key");
-		SendGrid sendGrid = new SendGrid(emailProperty.getApiKey());
-		LOG.info("API Key: " + emailProperty.getApiKey());
+		SendGrid sendGrid = new SendGrid(getEmailProperty().getApiKey());
+		LOG.info("API Key: " + getEmailProperty().getApiKey());
 
 		Email to = new Email(emailDetails.getTo()[0]);
 		Mail mail = new Mail(from, emailDetails.getSubject(), to, content);
@@ -85,6 +71,13 @@ public class EmailService {
 		return sendGrid.api(request);
 	}
 
+	/**
+	 * This method is used to send multiple emails
+	 * 
+	 * @param emailDetails
+	 * @return com.sendgrid.Response[]
+	 * @throws Exception
+	 */
 	public Response[] sendMultipleEmail(EmailDetails emailDetails) throws Exception {
 		LOG.info("Inside sendMultipleEmail method");
 		Request request = new Request();
@@ -107,19 +100,19 @@ public class EmailService {
 		return responses.toArray(new Response[0]);
 	}
 
-	public static EmailPropertyReader getEmailPropertyReader() {
+	public EmailPropertyReader getEmailPropertyReader() {
 		return emailPropertyReader;
 	}
 
-	public static void setEmailPropertyReader(EmailPropertyReader emailPropertyReader) {
-		EmailService.emailPropertyReader = emailPropertyReader;
+	public void setEmailPropertyReader(EmailPropertyReader emailPropertyReader) {
+		this.emailPropertyReader = emailPropertyReader;
 	}
 
-	public static EmailProperty getEmailProperty() {
+	public EmailProperty getEmailProperty() {
 		return emailProperty;
 	}
 
-	public static void setEmailProperty(EmailProperty emailProperty) {
-		EmailService.emailProperty = emailProperty;
+	public void setEmailProperty(EmailProperty emailProperty) {
+		this.emailProperty = emailProperty;
 	}
 }

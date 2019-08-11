@@ -1,4 +1,4 @@
-package com.service.sms;
+package com.service.textlocal.sms;
 
 /**
  * This class stores the confidential certificates which are required to send
