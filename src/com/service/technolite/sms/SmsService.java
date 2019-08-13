@@ -21,8 +21,7 @@ public class SmsService {
 
 	private SmsPropertyReader smsPropertyReader;
 	private SmsProperty smsProperty;
-	private SmsService smsService;
-
+	
 	/**
 	 * This method loads the configuration of the sms API using .properties file
 	 * 
@@ -85,14 +84,6 @@ public class SmsService {
 
 	public void setSmsProperty(SmsProperty smsProperty) {
 		this.smsProperty = smsProperty;
-	}
-
-	public SmsService getSmsService() {
-		return smsService;
-	}
-
-	public void setSmsService(SmsService smsService) {
-		this.smsService = smsService;
 	}
 
 	public SmsPropertyReader getSmsPropertyReader() {
