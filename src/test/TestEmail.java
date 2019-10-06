@@ -28,9 +28,9 @@ public class TestEmail {
 		// emailDetails.setTo("anantkshirsagar38@gmail.com", "icbm.iot@gmail.com");
 		emailDetails.setTo("icbm.iot@gmail.com");
 		emailDetails.setContentType(ContentTypes.TEXT_HTML);
-		
+
 		EmailService emailService = new EmailService();
-		emailService.load(new File("H:\\eclipse-14-May-2019-workspace\\AdminProject\\resources\\email.properties"));
+		emailService.load(new File("resources/email.properties"));
 		// Response[] sendEmail = emailService.sendMultipleEmail(emailDetails);
 		emailService.sendEmail(emailDetails);
 		// System.out.println(sendEmail);

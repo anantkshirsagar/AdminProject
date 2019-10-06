@@ -59,7 +59,7 @@ public class CSVUpload {
 		logger.info("Uploaded file name: " + fileName);
 		InputStream fileContent = filePart.getInputStream();
 
-		return getCsvData(fileName, filePart, fileContent, getDataFromPart(filePart));
+		return getCsvData(fileName, filePart, fileContent);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class CSVUpload {
 	 * @return CSVData
 	 * @throws IOException
 	 */
-	private static CSVData getCsvData(String fileName, Part filePart, InputStream inputStream, String fileData)
+	private static CSVData getCsvData(String fileName, Part filePart, InputStream inputStream)
 			throws IOException {
 		logger.info("Preparing csv data...");
 		CSVData csvData = new CSVData();

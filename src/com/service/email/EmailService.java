@@ -49,7 +49,7 @@ public class EmailService {
 	 * This method is used to send a single mail.
 	 * 
 	 * @param emailDetails
-	 * @return com.sendgrid.Response
+	 * @return com.sendgrid.Response   
 	 * @throws Exception
 	 */
 	public Response sendEmail(EmailDetails emailDetails) throws Exception {
@@ -60,7 +60,6 @@ public class EmailService {
 
 		LOG.info("Setting API Key");
 		SendGrid sendGrid = new SendGrid(getEmailProperty().getApiKey());
-		LOG.info("API Key: " + getEmailProperty().getApiKey());
 
 		Email to = new Email(emailDetails.getTo()[0]);
 		Mail mail = new Mail(from, emailDetails.getSubject(), to, content);

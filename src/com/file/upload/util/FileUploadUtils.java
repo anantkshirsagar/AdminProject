@@ -1,10 +1,12 @@
 package com.file.upload.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,9 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.commons.util.FileUtils;
+import com.model.FileContent;
+
 /**
  * This class contains utility functions which is used to upload file.
  * 
@@ -24,37 +29,42 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  *
  */
 public class FileUploadUtils {
-	private static final Logger logger = Logger.getLogger("FileUploadUtils");
+
+	private static final Logger logger = Logger.getLogger(FileUploadUtils.class.getName());
+
+	public static List<FileItem> getFileItems(HttpServletRequest request) throws FileUploadException {
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		ServletFileUpload servletFileUpload = new ServletFileUpload(factory);
+
+		List<FileItem> items = servletFileUpload.parseRequest(request);
+		logger.info("File item size: " + items.size());
+		return items;
+	}
 
 	/**
-	 * This is method is used to upload file.
+	 * This method is used to get single file from HttpServletRequest and it returns
+	 * FileContent which contains, inputstream, byte[] and filename
 	 * 
-	 * @param uploadPath
 	 * @param request
 	 * @return
-	 * @throws FileUploadException
 	 * @throws IOException
+	 * @throws FileUploadException
 	 */
-	public static void uploadFile(String uploadPath, HttpServletRequest request)
-			throws FileUploadException, IOException {
-		File fileSaveDir = new File(uploadPath);
-		if (!fileSaveDir.exists()) {
-			fileSaveDir.mkdirs();
-			logger.info("Directory created! Path: " + uploadPath);
-		}
-		DiskFileItemFactory factory = new DiskFileItemFactory();
-		ServletFileUpload upload = new ServletFileUpload(factory);
-
-		List<FileItem> items = upload.parseRequest(request);
-		logger.info("File item size: " + items.size());
-		for (FileItem fileItem : items) {
+	public static FileContent getFileContents(HttpServletRequest request) throws IOException, FileUploadException {
+		List<FileItem> items = getFileItems(request);
+		FileContent fileContents = new FileContent();
+		if (items != null && !items.isEmpty()) {
+			FileItem fileItem = items.get(0);
 			String fileName = fileItem.getName();
+			fileContents.setFileName(fileName);
 			logger.info("Filename: " + fileName);
 			if (!fileItem.isFormField()) {
-				InputStream inputStream = fileItem.getInputStream();
-				writeStream(inputStream, fileName, uploadPath);
+				fileContents.setBytes(FileUtils.toByteArray(fileItem.getInputStream()));
+				InputStream inputStream = new ByteArrayInputStream(fileContents.getBytes());
+				fileContents.setInputStream(inputStream);
 			}
 		}
+		return fileContents;
 	}
 
 	/**
@@ -80,7 +90,7 @@ public class FileUploadUtils {
 		inputStream.close();
 		outStream.flush();
 		outStream.close();
-		logger.info("File upload/download successfully! ");
+		logger.info("File uploaded successfully! ");
 	}
 
 	/**
@@ -109,30 +119,31 @@ public class FileUploadUtils {
 	}
 
 	/**
-	 * This method is used to get HttpServletRequest and it returns the Map contains
-	 * file name and input streams.
+	 * This method is used to return FileContent which contains filename and input
+	 * stream
 	 * 
 	 * @param request
-	 * @return
+	 * @return List<FileContents>
 	 * @throws FileUploadException
 	 * @throws IOException
 	 */
-	public static Map<String, InputStream> getFileInputStream(HttpServletRequest request)
+	public static List<FileContent> getMultipleFileContents(HttpServletRequest request)
 			throws FileUploadException, IOException {
-		DiskFileItemFactory factory = new DiskFileItemFactory();
-		ServletFileUpload upload = new ServletFileUpload(factory);
-
-		List<FileItem> items = upload.parseRequest(request);
-		Map<String, InputStream> inputStreamList = new LinkedHashMap<String, InputStream>();
+		List<FileItem> items = getFileItems(request);
+		List<FileContent> fileContentList = new ArrayList<FileContent>();
 		for (FileItem fileItem : items) {
+			FileContent fileContent = new FileContent();
 			String fileName = fileItem.getName();
+			fileContent.setFileName(fileName);
 			logger.info("Filename: " + fileName);
 			if (!fileItem.isFormField()) {
-				InputStream inputStream = fileItem.getInputStream();
-				inputStreamList.put(fileName, inputStream);
+				logger.info("Inside if");
+				fileContent.setBytes(FileUtils.toByteArray(fileItem.getInputStream()));
+				InputStream inputStream = new ByteArrayInputStream(fileContent.getBytes());
+				fileContent.setInputStream(inputStream);
 			}
+			fileContentList.add(fileContent);
 		}
-		logger.info("Input stream size: " + inputStreamList.size());
-		return inputStreamList;
+		return fileContentList;
 	}
 }

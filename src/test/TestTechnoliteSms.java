@@ -18,5 +18,4 @@ public class TestTechnoliteSms {
 		String response = smsService.sendSms(smsDetails);
 		System.out.println(response);
 	}
-
 }

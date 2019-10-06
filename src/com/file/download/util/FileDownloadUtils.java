@@ -26,9 +26,11 @@ public class FileDownloadUtils {
 	private static final String ATTACHMENT = "attachment; filename=";
 
 	/**
-	 * This method is takes two arguments savePath and fileDataMap savePath is the
-	 * location to save file and fileDataMap is the contains String - fileName and
-	 * Blob - fileContent
+	 * This method is used to save the file at specified location <br>
+	 * <code>savePath</code> Folder path <br>
+	 * <code>fileName</code> Name of the file <br>
+	 * <code>fileContents</code> java.sql.Blob which is directly taken from
+	 * database.
 	 * 
 	 * @param savePath
 	 * @param fileDataMap

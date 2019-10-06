@@ -25,5 +25,22 @@
 		File to upload: <input type="file" name="mycsvfile"><br /> <input
 			type="submit" value="Press"> to upload the file!
 	</form>
+	
+	<br> <br>
+	<form method="post" action="UploadServlet" enctype="multipart/form-data">
+		<input type="file" name="filename" value="Upload File"  multiple> 
+		<input type="submit" value="Upload Files"> 
+	</form>
+	
+	<br> <br>
+	<form method="post" action="FileDownloadTest" enctype="multipart/form-data">
+		<input type="file" name="filename" value="Save File" > 
+		<input type="submit" value="Save File"> 
+	</form>
+	
+	<br> <br>
+	<form method="post" action="FileDownloadTest">
+		<input type="submit" value="Download File"> 
+	</form>
 </body>
 </html>
